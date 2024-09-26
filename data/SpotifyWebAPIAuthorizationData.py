@@ -1,4 +1,5 @@
 from ..exceptions import InvalidJSONException
+from .._aux import validate_json
 
 
 class SpotifyWebAPIAuthorizationData:
@@ -8,7 +9,7 @@ class SpotifyWebAPIAuthorizationData:
         Instantiates SpotifyWebAPIAuthorizationData from a JSON dict.
 
         Extracts the "access_token", "token_type", and "expires_in" fields.
-        Raises a KeyError if any required field is missing.
+        Raises a InvalidJSONException if any required field is missing.
 
         Args:
             json (dict): A dictionary containing authorization data.
@@ -20,12 +21,9 @@ class SpotifyWebAPIAuthorizationData:
             InvalidJSONException: If required fields are missing.
         """
 
-        required_fields = ("access_token", "token_type", "expires_in")
-        missing_fields = [
-            field for field in required_fields if field not in json.keys()
-        ]
-        if missing_fields:
-            raise InvalidJSONException("Missing fields: " + ",".join(missing_fields))
+        validate_json(
+            json, required_fields=("access_token", "token_type", "expires_in")
+        )
 
         auth_data = SpotifyWebAPIAuthorizationData()
         auth_data.access_token = json["access_token"]
