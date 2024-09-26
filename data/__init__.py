@@ -1,1 +1,1 @@
-from .AuthData import AuthData
+from .SpotifyWebAPIAuthorizationData import SpotifyWebAPIAuthorizationData

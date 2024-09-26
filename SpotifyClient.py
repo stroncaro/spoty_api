@@ -1,6 +1,6 @@
 import requests
 
-from .data import AuthData
+from .data import SpotifyWebAPIAuthorizationData
 import _endpoints
 
 
@@ -25,4 +25,4 @@ class SpotifyClient:
         if not auth_response.status_code == 200:
             raise NotImplemented
 
-        self.auth_data = AuthData(auth_response.json())
+        self.auth_data = SpotifyWebAPIAuthorizationData.from_json(auth_response.json())
