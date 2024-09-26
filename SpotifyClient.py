@@ -1,6 +1,6 @@
 import requests
 
-from data import AuthData
+from .data import AuthData
 
 
 class SpotifyClient:
