@@ -1,7 +1,7 @@
 import requests
 
 from .data import SpotifyWebAPIAuthorizationData
-import _endpoints
+from ._endpoints import AUTHORIZATION as AUTH_ENDPOINT
 
 
 class SpotifyClient:
@@ -17,7 +17,7 @@ class SpotifyClient:
             "client_secret": self.client_secret,
         }
         auth_response = requests.post(
-            _endpoints.AUTHORIZATION,
+            AUTH_ENDPOINT,
             headers=headers,
             data=data,
         )
