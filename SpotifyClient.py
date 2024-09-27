@@ -28,4 +28,4 @@ class SpotifyClient:
                 f"Server response: {auth_response.json()}"
             )
 
-        self.auth_data = SpotifyWebAPIAuthorizationData.from_json(auth_response.json())
+        self.auth_data = SpotifyWebAPIAuthorizationData(data=auth_response.json())
