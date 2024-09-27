@@ -53,3 +53,115 @@ class SpotifyClient:
             )
 
         self.auth_data = SpotifyWebAPIAuthorizationData(data=auth_response.json())
+
+    # Albums
+    def get_album(self):
+        raise NotImplementedError
+
+    def get_several_albums(self):
+        raise NotImplementedError
+
+    def get_album_tracks(self):
+        raise NotImplementedError
+
+    def get_user_saved_albums(self):
+        raise NotImplementedError
+
+    def remove_user_saved_albums(self):
+        raise NotImplementedError
+
+    def check_user_saved_albums(self):
+        raise NotImplementedError
+
+    def get_new_releases(self):
+        raise NotImplementedError
+
+    # Artists
+    def get_artist(self):
+        raise NotImplementedError
+
+    def get_several_artists(self):
+        raise NotImplementedError
+
+    def get_artist_albums(self):
+        raise NotImplementedError
+
+    def get_artist_top_tracks(self):
+        raise NotImplementedError
+
+    def get_artist_related_artists(self):
+        raise NotImplementedError
+
+    # Genres
+    def get_available_genre_seeds(self):
+        raise NotImplementedError
+
+    # Markets
+    def get_available_markets(self):
+        raise NotImplementedError
+
+    # Search
+    def search(self):
+        raise NotImplementedError
+
+    # Tracks
+    def get_track(self):
+        raise NotImplementedError
+
+    def get_several_tracks(self):
+        raise NotImplementedError
+
+    def get_user_saved_tracks(self):
+        raise NotImplementedError
+
+    def save_tracks_for_current_user(self):
+        raise NotImplementedError
+
+    def remove_user_saved_tracks(self):
+        raise NotImplementedError
+
+    def check_user_saved_tracks(self):
+        raise NotImplementedError
+
+    def get_several_tracks_audio_features(self):
+        raise NotImplementedError
+
+    def get_track_audio_features(self):
+        raise NotImplementedError
+
+    def get_track_audio_analysis(self):
+        raise NotImplementedError
+
+    def get_recommendations(self):
+        raise NotImplementedError
+
+    # Users
+    def get_current_user_profile(self):
+        raise NotImplementedError
+
+    def get_user_top_items(self):
+        raise NotImplementedError
+
+    def get_user_profile(self):
+        raise NotImplementedError
+
+    def follow_playlist(self):
+        raise NotImplementedError
+
+    def unfollow_playlist(self):
+        raise NotImplementedError
+
+    def get_followed_artists(self):
+        raise NotImplementedError
+
+    def follow_artists_or_users(self):
+        raise NotImplementedError
+
+    def unfollow_artists_or_users(self):
+        raise NotImplementedError
+
+    def check_if_user_follows_artists_or_users(self):
+        raise NotImplementedError
+
+    def check_if_current_user_follows_playlist(self):
+        raise NotImplementedError
