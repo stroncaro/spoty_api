@@ -9,7 +9,9 @@ class SpotifyClient:
     def __init__(self, client_id: str, client_secret: str) -> None:
         self.client_id: str = client_id
         self.client_secret: str = client_secret
+        self._request_access_token()
 
+    def _request_access_token(self):
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
         data = {
