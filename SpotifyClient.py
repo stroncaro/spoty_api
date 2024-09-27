@@ -2,6 +2,7 @@ import requests
 
 from .data import SpotifyWebAPIAuthorizationData
 from ._endpoints import AUTHORIZATION as AUTH_ENDPOINT
+from .exceptions import InvalidClientCredentialsException
 
 
 class SpotifyClient:
@@ -23,6 +24,8 @@ class SpotifyClient:
         )
 
         if not auth_response.status_code == 200:
-            raise NotImplemented
+            raise InvalidClientCredentialsException(
+                f"Server response: {auth_response.json()}"
+            )
 
         self.auth_data = SpotifyWebAPIAuthorizationData.from_json(auth_response.json())
