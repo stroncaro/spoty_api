@@ -6,9 +6,14 @@ from .exceptions import InvalidClientCredentialsException
 
 
 class SpotifyClient:
+
+    client_id: str
+    client_secret: str
+    auth_data: SpotifyWebAPIAuthorizationData
+
     def __init__(self, client_id: str, client_secret: str) -> None:
-        self.client_id: str = client_id
-        self.client_secret: str = client_secret
+        self.client_id = client_id
+        self.client_secret = client_secret
         self._request_access_token()
 
     def _request_access_token(self):
