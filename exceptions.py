@@ -1,2 +1,2 @@
-class InvalidJSONException(Exception):
+class InvalidDictException(Exception):
     pass
