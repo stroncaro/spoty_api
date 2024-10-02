@@ -1,3 +1,4 @@
+from base64 import b64encode
 from typing import Type, Self, List
 
 import requests
@@ -28,39 +29,54 @@ class SpotifyClient(
     def access_token(self) -> str:
         return self._access_token
 
-    @classmethod
-    def with_client_credentials(
-        cls: Type[Self], *, client_id: str, client_secret: str
-    ) -> Type[Self]:
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
+    @staticmethod
+    def _request_access_token(headers, payload):
+        response = requests.post(
+            TOKEN,
+            headers=headers,
+            data=payload,
+        )
+        if not response.status_code == 200:
+            raise InvalidClientCredentialsException(
+                f"Server response: {response.json()}"
+            )
+        auth_data = SpotifyWebAPIAuthorizationData(data=response.json())
+        return auth_data.access_token
 
-        data = {
+    @staticmethod
+    def _generate_client_credentials_headers():
+        return {"Content-Type": "application/x-www-form-urlencoded"}
+
+    @staticmethod
+    def _generate_client_credentials_payload(client_id, client_secret):
+        return {
             "grant_type": "client_credentials",
             "client_id": client_id,
             "client_secret": client_secret,
         }
-        auth_response = requests.post(
-            TOKEN,
-            headers=headers,
-            data=data,
-        )
 
-        if not auth_response.status_code == 200:
-            raise InvalidClientCredentialsException(
-                f"Server response: {auth_response.json()}"
-            )
-
-        access_token = SpotifyWebAPIAuthorizationData(
-            data=auth_response.json()
-        ).access_token
-
+    @classmethod
+    def with_client_credentials(
+        cls: Type[Self], *, client_id: str, client_secret: str
+    ) -> Type[Self]:
+        headers = cls._generate_client_credentials_headers()
+        payload = cls._generate_client_credentials_payload(client_id, client_secret)
+        access_token = cls._request_access_token(headers, payload)
         return SpotifyClient(access_token=access_token)
+
+    @staticmethod
+    def _generate_authorization_code_headers(client_id, client_secret):
+        return {
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Authorization": 
+        }
 
     @classmethod
     def with_authorization_code(
         cls: Type[Self],
         *,
         client_id: str,
+        client_secret: str,
         redirect_uri: str,
         state: str = "",
         scope: List[str] = [],
