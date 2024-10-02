@@ -1,3 +1,5 @@
+from typing import Type, Self
+
 import requests
 
 from ..data import SpotifyWebAPIAuthorizationData
@@ -28,8 +30,8 @@ class SpotifyClient(
 
     @classmethod
     def with_client_credentials(
-        cls, *, client_id: str, client_secret: str
-    ) -> "SpotifyClient":
+        cls: Type[Self], *, client_id: str, client_secret: str
+    ) -> Type[Self]:
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
         data = {
