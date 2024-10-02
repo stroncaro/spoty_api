@@ -83,12 +83,31 @@ class SpotifyClient(
         if show_dialog:
             payload["show_dialog"] = "true"
 
-        auth_response = requests.get(
+        auth_page = requests.get(
             AUTHORIZE,
             params=payload,
         )
 
-        print(
-            f"Authentication process should continue at {auth_response.url}\nAborting now..."
+        # TODO: Open a browser and capture the redirection after user logs in to finish log in protocol
+        # Useful libraries:
+        #   Playwright - https://playwright.dev/python/docs/intro
+        #   Selenium - https://www.selenium.dev/documentation/webdriver/getting_started/install_library/
+
+        print(f"Please open the following URL and log in: {auth_page.url}")
+        print("When you are done, paste the URL you've been redirected to here:")
+        auth_result = input()
+
+        if not auth_result.startswith(redirect_uri):
+            raise ValueError(
+                f"Input does not correspond with redirect_uri:\n  {redirect_uri = }\n  {auth_result  = }"
+            )
+
+        auth_response_query = requests.utils.urlparse(auth_result).query
+        auth_response_params = dict(
+            q.split("=") for q in auth_response_query.split("&")
         )
+        if "error" in auth_response_params:
+            raise ValueError(f"Log in failed: {auth_response_params=}")
+        auth_code = auth_response_params["code"]
+
         raise NotImplementedError
