@@ -1,1 +1,1 @@
-from .client import SpotifyClient
+from .client.SpotifyClient import SpotifyClient
