@@ -16,40 +16,26 @@ class SpotifyClient(
     SpotifyClientFunctionality_Tracks,
     SpotifyClientFunctionality_Users,
 ):
-    """
-    Client for authenticating with the Spotify Web API and making authorized queries to various endpoints.
 
-    This client handles the OAuth 2.0 Client Credentials Flow to authenticate the app with Spotify and
-    obtain an access token, which is required to make requests to the Spotify Web API.
+    _access_token: str
 
-    Attributes:
-        client_id (str): The Spotify client ID provided for the app.
-        client_secret (str): The Spotify client secret associated with the app.
-        auth_data (SpotifyWebAPIAuthorizationData): Stores the authorization data, including access token, token type, and expiration time.
+    def __init__(self, *, access_token: str) -> None:
+        self._access_token = access_token
 
-    Methods:
-        __init__(client_id, client_secret):
-            Initializes the client with the provided credentials and requests an access token.
-        _request_access_token():
-            Handles the token request using the Client Credentials Flow and raises an error if authentication fails.
-    """
+    @property
+    def access_token(self) -> str:
+        return self._access_token
 
-    client_id: str
-    client_secret: str
-    auth_data: SpotifyWebAPIAuthorizationData
-
-    def __init__(self, client_id: str, client_secret: str) -> None:
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self._request_access_token()
-
-    def _request_access_token(self):
+    @classmethod
+    def with_client_credentials(
+        cls, *, client_id: str, client_secret: str
+    ) -> "SpotifyClient":
         headers = {"Content-Type": "application/x-www-form-urlencoded"}
 
         data = {
             "grant_type": "client_credentials",
-            "client_id": self.client_id,
-            "client_secret": self.client_secret,
+            "client_id": client_id,
+            "client_secret": client_secret,
         }
         auth_response = requests.post(
             AUTH_ENDPOINT,
@@ -62,4 +48,8 @@ class SpotifyClient(
                 f"Server response: {auth_response.json()}"
             )
 
-        self.auth_data = SpotifyWebAPIAuthorizationData(data=auth_response.json())
+        access_token = SpotifyWebAPIAuthorizationData(
+            data=auth_response.json()
+        ).access_token
+
+        return SpotifyClient(access_token=access_token)
