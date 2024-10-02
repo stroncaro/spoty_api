@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from base64 import b64encode
 
 import requests
@@ -6,7 +6,7 @@ import requests
 from .._endpoints import AUTHORIZE
 
 
-def generate_headers(client_id, client_secret):
+def generate_headers(client_id: str, client_secret: str) -> Dict[str, str]:
     b64_encoded_credentials = f"{client_id}:{client_secret}".encode()
     b64_encoded_credentials = b64encode(b64_encoded_credentials)
     b64_encoded_credentials = str(b64_encoded_credentials, encoding="utf-8")
@@ -16,7 +16,7 @@ def generate_headers(client_id, client_secret):
     }
 
 
-def generate_payload(code, redirect_uri):
+def generate_payload(code: str, redirect_uri: str) -> Dict[str, str]:
     return {
         "grant_type": "authorization_code",
         "code": code,
@@ -30,7 +30,7 @@ def generate_authorization_url(
     state: str,
     scope: List[str],
     show_dialog: bool,
-):
+) -> str:
     payload = {
         "grant_type": "client_credentials",
         "client_id": client_id,
@@ -50,7 +50,7 @@ def generate_authorization_url(
     return auth_page.url
 
 
-def get_code_from_auth_redirect(auth_result, redirect_uri):
+def get_code_from_auth_redirect(auth_result: str, redirect_uri: str) -> str:
     if not auth_result.startswith(redirect_uri):
         raise ValueError(
             f"Input does not correspond with redirect_uri:\n  {redirect_uri = }\n  {auth_result  = }"

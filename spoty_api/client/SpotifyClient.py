@@ -44,7 +44,7 @@ class SpotifyClient(
         state: str = "",
         scope: List[str] = [],
         show_dialog: bool = False,
-    ):
+    ) -> Type[Self]:
 
         authorization_url = AuthorizationCodeUtils.generate_authorization_url(
             client_id, redirect_uri, state, scope, show_dialog
