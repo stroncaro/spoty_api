@@ -66,9 +66,20 @@ class SpotifyClient(
 
     @staticmethod
     def _generate_authorization_code_headers(client_id, client_secret):
+        b64_encoded_credentials = f"{client_id}:{client_secret}".encode()
+        b64_encoded_credentials = b64encode(b64_encoded_credentials)
+        b64_encoded_credentials = str(b64_encoded_credentials, encoding="utf-8")
         return {
             "Content-Type": "application/x-www-form-urlencoded",
-            "Authorization": 
+            "Authorization": f"Basic {b64_encoded_credentials}",
+        }
+
+    @staticmethod
+    def _generate_authorization_code_payload(code, redirect_uri):
+        return {
+            "grant_type": "authorization_code",
+            "code": code,
+            "redirect_uri": redirect_uri,
         }
 
     @classmethod
@@ -82,6 +93,7 @@ class SpotifyClient(
         scope: List[str] = [],
         show_dialog: bool = False,
     ):
+        # TODO: Cleanup, possibly creating utility methods
 
         payload = {
             "grant_type": "client_credentials",
@@ -114,6 +126,7 @@ class SpotifyClient(
         auth_result = input()
 
         if not auth_result.startswith(redirect_uri):
+
             raise ValueError(
                 f"Input does not correspond with redirect_uri:\n  {redirect_uri = }\n  {auth_result  = }"
             )
@@ -124,6 +137,9 @@ class SpotifyClient(
         )
         if "error" in auth_response_params:
             raise ValueError(f"Log in failed: {auth_response_params=}")
-        auth_code = auth_response_params["code"]
+        code = auth_response_params["code"]
 
-        raise NotImplementedError
+        headers = cls._generate_authorization_code_headers(client_id, client_secret)
+        payload = cls._generate_authorization_code_payload(code, redirect_uri)
+        access_token = cls._request_access_token(headers, payload)
+        return SpotifyClient(access_token=access_token)
