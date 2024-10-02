@@ -1,9 +1,9 @@
-from typing import Type, Self
+from typing import Type, Self, List
 
 import requests
 
 from ..data import SpotifyWebAPIAuthorizationData
-from .._endpoints import AUTHORIZATION as AUTH_ENDPOINT
+from .._endpoints import TOKEN, AUTHORIZE
 from ..exceptions import InvalidClientCredentialsException
 
 from ._functionality import *
@@ -40,7 +40,7 @@ class SpotifyClient(
             "client_secret": client_secret,
         }
         auth_response = requests.post(
-            AUTH_ENDPOINT,
+            TOKEN,
             headers=headers,
             data=data,
         )
@@ -55,3 +55,40 @@ class SpotifyClient(
         ).access_token
 
         return SpotifyClient(access_token=access_token)
+
+    @classmethod
+    def with_authorization_code(
+        cls: Type[Self],
+        *,
+        client_id: str,
+        redirect_uri: str,
+        state: str = "",
+        scope: List[str] = [],
+        show_dialog: bool = False,
+    ):
+
+        payload = {
+            "grant_type": "client_credentials",
+            "client_id": client_id,
+            "response_type": "code",
+            "redirect_uri": redirect_uri,
+        }
+
+        if state:
+            payload["state"] = state
+
+        if scope:
+            payload["scope"] = " ".join(scope)
+
+        if show_dialog:
+            payload["show_dialog"] = "true"
+
+        auth_response = requests.get(
+            AUTHORIZE,
+            params=payload,
+        )
+
+        print(
+            f"Authentication process should continue at {auth_response.url}\nAborting now..."
+        )
+        raise NotImplementedError
